@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "pj_bank",
   "version": "1.0.0",
   "description": "",

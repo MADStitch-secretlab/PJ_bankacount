@@ -63,7 +63,7 @@ const section =() => {
     });
 
 }
- const input = () => {
+const input = () => {
 
      rl.question("입금할 통화을 입력하세요: ", function (answer) {
          if (answer === "KRW" || answer === "USD" || answer === "JPY" || answer === "CNY") {
