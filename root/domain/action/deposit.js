@@ -1,5 +1,5 @@
-import {addAccount} from "./repository/add-account.js";
-import {inputMoney} from "./helper/input-money.js";
+import {addMoney} from "./repository/add-money.js";
+import {inputAmount} from "./helper/input-amount.js";
 import {promiseReadLine} from "./utils/promise-readline.js";
 
 async function deposit() {
@@ -12,8 +12,8 @@ async function deposit() {
         console.log("종료합니다.");
         process.exit();
     }
-    const numAnswer = await inputMoney();
-    await addAccount(currency, numAnswer);
+    const numAnswer = await inputAmount();
+    await addMoney(currency, numAnswer);
 
 }
 

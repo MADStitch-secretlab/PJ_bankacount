@@ -1,24 +1,15 @@
-import mysql from 'mysql2/promise';
-
-async function createConnection() {
-    // Connection 객체를 반환합니다.
-    return await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: 'ehdgur0209**',
-        database: 'acount'
-    });
-}
-
-export const addAccount = async function (currency, numAnswer) {
+import { connectSql } from '../utils/connect-sql.js';
+import {checkallMoney} from "./check-money.js";
+export const addMoney = async function (currency, numAnswer) {
     try {
-        const connection = await createConnection(); // Connection을 생성합니다.
+        const connection = await connectSql();
         const updateQuery = `UPDATE acount SET ${currency} = ${currency} + ? WHERE user = ?`;
 
         // query 실행. 비동기이므로 await를 사용하며, 결과를 직접 받습니다.
         const results = await connection.query(updateQuery, [numAnswer, 1]);
 
-        console.log('입금 완료', results);
+        console.log('입금 완료');
+        await checkallMoney();
         process.exit();
 
         // 사용 후 연결을 종료합니다. process.exit()를 사용하는 대신 연결을 종료해 주세요.

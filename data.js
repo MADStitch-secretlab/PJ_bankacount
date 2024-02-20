@@ -1,5 +1,5 @@
 
-const mysql = require('mysql2/promise');
+
 
 async function getKRW() {
     const connection = await mysql.createConnection({

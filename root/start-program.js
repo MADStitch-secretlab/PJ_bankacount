@@ -1,4 +1,4 @@
-import {programSection} from "./domain/program-section.js";
+import {selectProgram} from "./domain/select-program.js";
 import {promiseReadLine} from "./domain/action/utils/promise-readline.js";
 
 async function startProgram () {
@@ -9,7 +9,7 @@ async function startProgram () {
             await startProgram();
 
             }
-        await programSection();
+        await selectProgram();
     }
 
 
