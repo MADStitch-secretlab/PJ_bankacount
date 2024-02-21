@@ -1,2 +1,2 @@
-import {startProgram} from "./root/start-program.js";
+import {startProgram} from "./start-program.js";
 startProgram()
