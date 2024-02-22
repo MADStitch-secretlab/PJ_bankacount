@@ -1,6 +1,6 @@
 import { ACTION_MAP } from "../const/action-map.const.js";
 import { promiseReadLine } from "../../common/utils/promise-readline.utils.js";
-import { MESSAGE } from "../const/message.const";
+import { MESSAGE } from "../const/message.const.js";
 async function selectProgram() {
   const answer = await promiseReadLine(MESSAGE.SELECTPROGRAM);
 

@@ -7,6 +7,7 @@ const subtractComparing = async (currency, numAnswer) => {
   const money = await checkCurrency(currency);
   if (money < numAnswer) {
     console.log(MESSAGE.WITHDRAW.LOW_MONEY);
+    await showAccount();
     process.exit();
   }
   await subtractMoneySingle(currency, numAnswer);
