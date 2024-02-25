@@ -10,10 +10,11 @@ async function deposit() {
   try {
     const currency = await promiseReadLine(MESSAGE.DEPOSIT.INPUT_CURRENCY);
     checkExit(currency);
+    const upperCurrency = currency.toUpperCase();
 
-    if (ENABLED_CURRENCIES.includes(currency)) {
+    if (ENABLED_CURRENCIES.map((c)=> c.currency).includes(upperCurrency)) {
       const numAnswer = await inputAmount();
-      await addMoney(currency, numAnswer);
+      await addMoney(upperCurrency, numAnswer);
       console.log(MESSAGE.DEPOSIT.SUCCESS);
       await showAccount()
       process.exit()

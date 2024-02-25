@@ -13,3 +13,5 @@ const checkAccount = async (account) => {
 };
 
 export {checkAccount};
+
+// get | find, update, create, delete, findAll, ...

@@ -12,7 +12,7 @@ async function selectProgram() {
   }
 
   console.log(MESSAGE.RETRY);
-  await selectProgram();
+  return selectProgram();
 }
 
 export { selectProgram };

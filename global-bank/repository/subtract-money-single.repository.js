@@ -1,6 +1,8 @@
 import { connectSql } from "../../db/service/connect-mysql.utils.js";
 
-const subtractMoneySingle = async (currency, numAnswer) => {
+// method : "add" | "subtract"
+
+const subtractMoneySingle = async (currency, numAnswer, method) => {
   const connection = await connectSql();
   try {
     const updateQuery = `UPDATE acount SET ${currency} = ${currency} - ? WHERE user = ?`;
@@ -13,3 +15,6 @@ const subtractMoneySingle = async (currency, numAnswer) => {
   }
 };
 export { subtractMoneySingle };
+
+
+// const updateMoney = ...

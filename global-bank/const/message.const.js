@@ -24,13 +24,13 @@ const MESSAGE = {
 
     },
     EXCHANGE: {
-        SECELCT_SECTION : "실행할 항목을 선택하세요 \n 1. 환율 확인 \n 2. 환전 \n 3. 종료 \n: ",
+        SELECT_SECTION : "실행할 항목을 선택하세요 \n 1. 환율 확인 \n 2. 환전 \n 3. 종료 \n: ",
         TO : "환전받을 통화를 입력하세요: ",
         FROM : "환전할 통화를 입력하세요: ",
-        AMOUNT : "환전할 금액을 입력하세요: ",
+        AMOUNT : "환전할 금액을 입력하세요 \n 환전시에는 10%의 수수료가 붙습니다 \n: ",
         SAME_CURRENCY : "같은 통화는 환전할 수 없습니다.",
         INPUT_MAIN_CURRENCY : "환율을 확인할 통화를 입력하세요: ",
-        SELECT_SECOND_SECTION : "실행할 항목을 선택하세요 \n 1. 환전 \n 2. 다른 환율 확인 \n 3. 종료 \n: ",
+        SELECT_EXCHANGE_OR_OTHER : "실행할 항목을 선택하세요 \n 1. 다른 환율 확인 \n 2. 환전 \n 3. 종료 \n: ",
         NOT_ENOUGH : "환전할 금액이 부족합니다.",
         SUCCESS : "환전이 완료되었습니다.",
 
