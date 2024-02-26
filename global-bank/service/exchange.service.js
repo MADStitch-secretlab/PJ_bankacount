@@ -6,21 +6,28 @@ import { EXCHANGE_ACTION_MAP } from "../const/action-map.const.js";
 import { ENABLED_CURRENCIES } from "../const/currency.const.js";
 import { compareExchangeRate } from "../helper/compare-exchange-rate.helper.js";
 import { exchangeComparing } from "../helper/exchage-comparing.helper.js";
-import { updateRepository } from "../repository/exchange.repository.js";
-import { checkCurrency } from "../repository/check-money.repository.js";
-import { showAccount } from "../helper/show-account.helper.js";
+import { updateAccount } from "../repository/update-account.repository.js";
+import { findCurrencyAmount } from "../repository/find-money-amount.repository.js";
+import { showAccount } from "./inquiry.service.js";
 
-const exchange = async () => {
+/**
+ * retry 는 환율은 이미 조회했는지를 판단하는 boolean 값
+ */
+const exchange = async (retry) => {
   try {
-    const exchangeSection = await promiseReadLine(
-      MESSAGE.EXCHANGE.SELECT_SECTION,
+    const answer = await promiseReadLine(
+      retry
+        ? MESSAGE.EXCHANGE.SELECT_EXCHANGE_OR_OTHER
+        : MESSAGE.EXCHANGE.SELECT_SECTION,
     );
-    checkExit(exchangeSection);
+
+    checkExit(answer);
+
     for (const action of Object.values(EXCHANGE_ACTION_MAP)) {
-      if (!action.keys.includes(exchangeSection)) {
-        throw new Error(MESSAGE.RETRY);
+      if (action.keys.includes(answer)) {
+        await action.action();
+        return;
       }
-      await action.action();
     }
   } catch (e) {
     console.log(e.message);
@@ -56,27 +63,11 @@ const showExchangeRate = async () => {
     console.log(
       `${shownList.map((c) => `${c.baseAmount}${c.currency}${c.to_KR} : ${exchangeRateMap[c.currency] * [c.baseAmount]}${upperCurrency}${targetCurrency.to_KR}`).join("\n")}`,
     );
-    return selectExchangeOrOther();
+    return exchange(true);
   } catch (e) {
     console.log(e.message);
     return showExchangeRate();
   }
-};
-
-const selectExchangeOrOther = async () => {
-  const answer = await promiseReadLine(
-    MESSAGE.EXCHANGE.SELECT_EXCHANGE_OR_OTHER,
-  );
-
-  for (const action of Object.values(EXCHANGE_ACTION_MAP)) {
-    if (action.keys.includes(answer)) {
-      await action.action();
-      return;
-    }
-  }
-
-  console.log(MESSAGE.RETRY);
-  return selectExchangeOrOther();
 };
 
 const exchangeCurrency = async () => {
@@ -99,10 +90,16 @@ const exchangeCurrency = async () => {
     // 환전 후 금액
     const result =
       (await compareExchangeRate(to, from)) * parseFloat(amount, 10) +
-      (await checkCurrency(to));
+      (await findCurrencyAmount(to));
+    /*
+    * await checkCurrency(["KRW", "USD"])
+    * */
     // 환전 정보 sql에 저장
-    await updateRepository(from, fromAmount);
-    await updateRepository(from, result);
+    await updateAccount(from, fromAmount);
+    await updateAccount(to, result);
+    /*
+    * await updateRepository({ KRW : 30000, USD : 100 })
+    * */
     await console.log(MESSAGE.EXCHANGE.SUCCESS);
     await showAccount();
   } catch (e) {
@@ -111,4 +108,4 @@ const exchangeCurrency = async () => {
   }
 };
 
-export { exchange, showExchangeRate, exchangeCurrency , selectExchangeOrOther};
+export { exchange, showExchangeRate, exchangeCurrency };

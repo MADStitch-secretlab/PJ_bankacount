@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 
-async function connectSql() {
+async function connectMySql() {
     // Connection 객체를 반환합니다.
     return await mysql.createConnection({
         host: 'localhost',
@@ -9,4 +9,4 @@ async function connectSql() {
         database: 'acount'
     });
 }
-export {connectSql};
+export {connectMySql};

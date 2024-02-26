@@ -1,30 +1,38 @@
-import { addMoney } from "../repository/add-money.repository.js";
-import { inputAmount } from "../helper/input-amount.helper.js";
-import { promiseReadLine } from "../../common/utils/promise-readline.utils.js";
-import { ENABLED_CURRENCIES } from "../const/currency.const.js";
-import { checkExit } from "../utils/check-exit.utils.js";
-import {showAccount} from "../helper/show-account.helper.js";
+import { promiseReadLineWithValidationFns} from "../../common/utils/promise-readline.utils.js";
+import {showAccount} from "./inquiry.service.js";
 import {MESSAGE} from "../const/message.const.js";
+import {findCurrencyAmount} from "../repository/find-money-amount.repository.js";
+import {updateAccount} from "../repository/update-account.repository.js";
+import {isNumber} from "../helper/check-is-it-num.helper.js";
+import {checkIsItCurrency} from "../utils/check-isit-currency.utils.js";
+
+
 
 async function deposit() {
   try {
-    const currency = await promiseReadLine(MESSAGE.DEPOSIT.INPUT_CURRENCY);
-    checkExit(currency);
-    const upperCurrency = currency.toUpperCase();
 
-    if (ENABLED_CURRENCIES.map((c)=> c.currency).includes(upperCurrency)) {
-      const numAnswer = await inputAmount();
-      await addMoney(upperCurrency, numAnswer);
-      console.log(MESSAGE.DEPOSIT.SUCCESS);
-      await showAccount()
-      process.exit()
+    const currency = await promiseReadLineWithValidationFns({
+        question: MESSAGE.DEPOSIT.INPUT_CURRENCY,
+        validationFnList: [checkIsItCurrency],
+        transformFn: (currency) => currency.toUpperCase(),
+    });
+    const amount = await promiseReadLineWithValidationFns({
+        question: MESSAGE.DEPOSIT.INPUT_AMOUNT,
+        validationFnList: [isNumber],
+        transformFn: (amount) => parseFloat(amount )
+    });
 
-    }
-    throw new Error(MESSAGE.RETRY);
+    const currentAmount = await findCurrencyAmount(currency);
+    const amountResult = amount + currentAmount;
+    await updateAccount(currency, amountResult);
+    console.log(MESSAGE.DEPOSIT.SUCCESS);
+    await showAccount()
+    process.exit()
   } catch (e) {
     console.log(e.message);
     return deposit();
   }
 }
 
-export { deposit };
+export {deposit};
+
