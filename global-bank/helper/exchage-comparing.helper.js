@@ -1,23 +1,14 @@
-import {findCurrencyAmount} from "../repository/find-money-amount.repository.js";
-import {MESSAGE} from "../const/message.const.js";
+import { MESSAGE } from "../const/message.const.js";
 
+const exchangeComparing = async (fromMoney, amount) => {
+  try {
+    if (fromMoney < amount * 1.1) throw new Error(MESSAGE.EXCHANGE.NOT_ENOUGH);
 
-const exchangeComparing = async (from ,amount) => {
-    try {
-        const money = parseFloat(await findCurrencyAmount(from));
-
-        const numAmount = parseFloat(amount);
-
-
-        if (money < amount*1.1) throw new Error(MESSAGE.EXCHANGE.NOT_ENOUGH);
-
-        const result = money - numAmount*1.1;
-        return result
-
-    }catch (e) {
-        console.log(e.message);
-        throw new Error;
-
-    }
-}
+    const result = fromMoney - amount * 1.1;
+    return fromMoney - amount * 1.1;
+  } catch (e) {
+    console.log(e.message);
+    throw new Error();
+  }
+};
 export {exchangeComparing};
