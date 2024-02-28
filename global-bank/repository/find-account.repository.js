@@ -3,7 +3,7 @@ import { connectMySql } from "../../db/service/connect-mysql.utils.js";
 const findAccount = async (account) => {
   try {
     const connection = await connectMySql();
-    const selectQuery = `SELECT * FROM acount`;
+    const selectQuery = `SELECT * FROM account`;
     const [rows] = await connection.query(selectQuery);
     return rows[0].account;
   } catch (error) {

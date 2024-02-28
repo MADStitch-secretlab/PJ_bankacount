@@ -3,7 +3,7 @@ import { connectMySql } from "../../db/service/connect-mysql.utils.js";
 const findAllAmount = async () => {
   const connection = await connectMySql();
   try {
-    const selectQuery = `SELECT * from acount`;
+    const selectQuery = `SELECT * from account`;
     const [rows] = await connection.query(selectQuery);
     const account = rows[0].account;
     const KRWMoney = rows[0].KRW;
@@ -25,17 +25,29 @@ const findAllAmount = async () => {
   }
 };
 
-const findCurrencyAmount = async (currency) => {
-  try {
-    const connection = await connectMySql();
-    const selectQuery = `SELECT ${currency} from acount`;
-    const [rows] = await connection.query(selectQuery);
-    return Number(rows[0][currency] ?? 0);
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
-  }
-};
 
+const findMultiCurrencyAmount = async (inputs) => {
+  // inputs = ['KRW', 'USD', 'JPY', 'CNY']
+  const connection = await connectMySql();
+    try {
+      const result = {};
+      for (const currency of inputs) {
+        const selectQuery = `SELECT ${currency} from account`;
+        const [rows] = await connection.query(selectQuery);
+        result[currency] = Number(rows[0][currency] ?? 0);
 
-export { findAllAmount, findCurrencyAmount };
+        
+      }return result;
+    }
+    catch (error) {
+      console.error(error);
+        process.exit(1);
+        }
+    finally {
+        await connection.end();
+    }
+        
+
+}
+
+export { findAllAmount,  findMultiCurrencyAmount};
