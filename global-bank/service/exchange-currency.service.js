@@ -4,8 +4,8 @@ import {isNumber} from "../helper/check-is-it-num.helper.js";
 import {checkIsItCurrency} from "../utils/check-isit-currency.utils.js";
 import {exchangeComparing} from "../helper/exchage-comparing.helper.js";
 import {compareExchangeRate} from "../helper/compare-exchange-rate.helper.js";
-import {findCurrencyAmount} from "../repository/find-money-amount.repository.js";
-import {updateAccount} from "../repository/update-account.repository.js";
+import { findMultiCurrencyAmount} from "../repository/find-money-amount.repository.js";
+import {updateAccountMulti} from "../repository/update-account.repository.js";
 import {showAccount} from "./inquiry.service.js";
 
 const exchangeCurrency = async (string) => {
@@ -27,8 +27,9 @@ const exchangeCurrency = async (string) => {
       validationFnList: [isNumber],
       transformFn: (amount) => parseFloat(amount, 1),
     });
-    const fromMoney = await findCurrencyAmount(from);
-    const toMoney = await findCurrencyAmount(to);
+    const Money = await findMultiCurrencyAmount([from, to]);
+    const fromMoney = Money[from];
+    const toMoney = Money[to];
     // 환전할 금액(10% 부과한 금액)이 충분한지 확인
     const fromAmount = await exchangeComparing(fromMoney, amount);
     // 환전 후 금액
@@ -36,8 +37,7 @@ const exchangeCurrency = async (string) => {
     const exchangeRate = await compareExchangeRate(to, from);
     const result = exchangeRate * amount + toMoney;
     // 환전 정보 sql에 저장
-    await updateAccount(from, fromAmount);
-    await updateAccount(to, result);
+    await updateAccountMulti({[from] : fromAmount , [to] : result});
     /*
      * await updateRepository({ KRW : 30000, USD : 100 })
      * */

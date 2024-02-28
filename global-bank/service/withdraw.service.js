@@ -1,20 +1,17 @@
 import {
-  promiseReadLine,
   promiseReadLineWithValidationFns,
 } from "../../common/utils/promise-readline.utils.js";
 import { isNumber } from "../helper/check-is-it-num.helper.js";
 import { showAccount } from "./inquiry.service.js";
-import { ENABLED_CURRENCIES } from "../const/currency.const.js";
 import { MESSAGE } from "../const/message.const.js";
-import { exchange } from "./exchange.service.js";
+import { activateExchangeController } from "../controller/exchange-controller.controller.js";
 import { checkIsItCurrency } from "../utils/check-isit-currency.utils.js";
-import { checkExit } from "../utils/check-exit.utils.js";
 import {
   findAllAmount,
-  findCurrencyAmount,
+  findMultiCurrencyAmount,
 } from "../repository/find-money-amount.repository.js";
 
-import { updateAccount } from "../repository/update-account.repository.js";
+import { updateAccountMulti } from "../repository/update-account.repository.js";
 
 const withdraw = async () => {
   const currency = await promiseReadLineWithValidationFns({
@@ -30,17 +27,18 @@ const withdraw = async () => {
   });
 
 
-  const money = await findCurrencyAmount(currency);
-  if (money < amount) {
+  const money = await findMultiCurrencyAmount([currency]);
+  const currentMoney = money[currency];
+  if (currentMoney < amount) {
     console.log(MESSAGE.WITHDRAW.LOW_MONEY);
     const money = await findAllAmount();
     console.log(
       `${money.account}의 잔고: KRW: ${money.KRWMoney}, USD: ${money.USDMoney}, JPY: ${money.JPYMoney}, CNY: ${money.CNYMoney}`,
     );
-    return exchange(true);
+    return activateExchangeController();
   }
-  const result = money - amount;
-  await updateAccount(currency, result);
+  const result = currentMoney - amount;
+  await updateAccountMulti({[currency] : result});
   console.log(MESSAGE.WITHDRAW.SUCCESS);
   return showAccount();
 };
