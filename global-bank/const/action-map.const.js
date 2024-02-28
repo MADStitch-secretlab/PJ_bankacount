@@ -1,10 +1,10 @@
 import { deposit } from "../service/deposit.service.js";
 import { withdraw } from "../service/withdraw.service.js";
 import { showAccountByAccountNumber } from "../service/inquiry.service.js";
-import { exchange } from "../service/exchange.service.js";
+import {activateExchangeController } from "../controller/exchange-controller.controller.js";
 import { exit } from "../service/exit.service.js";
-import { exchangeCurrency } from "../service/exchange.service.js";
-import { showExchangeRate } from "../service/exchange.service.js";
+import { exchangeCurrency } from "../service/exchange-currency.service.js";
+import { showExchangeRate } from "../service/show-exchange-rate.service.js";
 const ACTION_MAP = {
   DEPOSIT: {
     action: deposit,
@@ -19,8 +19,10 @@ const ACTION_MAP = {
     keys: ["3", "잔고 확인", "inquiry"],
   },
   EXCHANGE: {
-    action: exchange,
+    action: activateExchangeController,
+    keys: ["4", "환전", "exchange"],
     subActionMap: {
+
       SHOW_EXCHANGE_RATE: {
         action: showExchangeRate,
         keys: ["1", "환율 확인", "show-exchange-rate", "다른 환율 확인"],
@@ -34,7 +36,6 @@ const ACTION_MAP = {
         keys: ["3", "종료", "exit"],
       },
     },
-    keys: ["4", "환전", "exchange"],
   },
 
   EXIT: {
@@ -43,18 +44,5 @@ const ACTION_MAP = {
   },
 };
 
-const EXCHANGE_ACTION_MAP = {
-  SHOW_EXCHANGE_RATE: {
-    action: showExchangeRate,
-    keys: ["1", "환율 확인", "show-exchange-rate", "다른 환율 확인"],
-  },
-  EXCHANGE: {
-    action: exchangeCurrency,
-    keys: ["2", "환전", "exchange currency"],
-  },
-  EXIT: {
-    action: exit,
-    keys: ["3", "종료", "exit"],
-  },
-};
-export { ACTION_MAP, EXCHANGE_ACTION_MAP };
+
+export { ACTION_MAP };
