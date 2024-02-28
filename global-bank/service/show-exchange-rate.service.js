@@ -2,13 +2,10 @@ import { MESSAGE } from "../const/message.const.js";
 import { checkExit } from "../utils/check-exit.utils.js";
 import { promiseReadLine } from "../../common/utils/promise-readline.utils.js";
 import { checkIsItCurrency } from "../utils/check-isit-currency.utils.js";
-import { EXCHANGE_ACTION_MAP } from "../const/action-map.const.js";
 import { ENABLED_CURRENCIES } from "../const/currency.const.js";
 import { compareExchangeRate } from "../helper/compare-exchange-rate.helper.js";
-import { exchangeComparing } from "../helper/exchage-comparing.helper.js";
-import { updateAccount } from "../repository/update-account.repository.js";
-import { findCurrencyAmount } from "../repository/find-money-amount.repository.js";
-import { showAccount } from "./inquiry.service.js";
+
+import {activateExchangeController} from "../controller/exchange-controller.controller.js";
 
 /**
  * retry 는 환율은 이미 조회했는지를 판단하는 boolean 값
@@ -21,9 +18,11 @@ const showExchangeRate = async () => {
       MESSAGE.EXCHANGE.INPUT_MAIN_CURRENCY,
     );
     checkExit(mainCurrency);
-    const upperCurrency = checkIsItCurrency(mainCurrency);
+    checkIsItCurrency(mainCurrency);
+    const upperCurrency = mainCurrency.toUpperCase();
     if (!ENABLED_CURRENCIES.map((c) => c.currency).includes(upperCurrency)) {
-      throw new Error(MESSAGE.EXCHANGE.RETRY);
+      throw new Error(MESSAGE.RETRY);
+
     }
     const exchangeRateMap = ENABLED_CURRENCIES.reduce((acc, curr) => {
       return {
