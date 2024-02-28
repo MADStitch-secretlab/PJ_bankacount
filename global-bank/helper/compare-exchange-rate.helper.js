@@ -1,10 +1,10 @@
-import {getRandomRateBy30Seconds} from "./change-rate-30sec.helper.js";
 import {getExchangeRate} from "./get-exchange-rate.helper.js";
+import {getRandomNumber} from "../../common/utils/random-crypto.utils.js";
 
 const compareExchangeRate = (to, from) => {
     const toRate = getExchangeRate(to);
     const fromRate = getExchangeRate(from);
-    return getRandomRateBy30Seconds()* parseFloat(toRate / fromRate);
+    return getRandomNumber(30 , 0.9, 1.1) * parseFloat(toRate / fromRate);
 };
 
 export {compareExchangeRate};
